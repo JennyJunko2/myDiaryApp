@@ -1,12 +1,43 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+
+import CalendarScreen from './screens/CalendarScreen';
+import ManageDiaryScreen from './screens/ManageDiaryScreen'
+import IconButton from './components/IconButton';
+
+const Stack = createNativeStackNavigator() 
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <>
       <StatusBar style="auto" />
-    </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name='Calendar'
+            component={CalendarScreen}
+            options={({navigation}) => ({
+              title: 'Happy Days',
+              headerRight: ({tintColor}) => (
+                <IconButton
+                  icon='feather'
+                  color={tintColor}
+                  size={28}
+                  onPress={() => {navigation.navigate('ManageDiary')}}
+                />
+                )
+            })}
+            />
+          <Stack.Screen
+            name='ManageDiary'
+            component={ManageDiaryScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 
