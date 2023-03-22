@@ -3,9 +3,9 @@ import { View, Text, Image, StyleSheet, Alert } from 'react-native'
 import { launchCameraAsync, useCameraPermissions, PermissionStatus } from 'expo-image-picker'
 import IconButton from './IconButton'
 
-const PhotoPicker = ({onPick}) => {
+const PhotoPicker = ({onPick, initialValue}) => {
   const [cameraPermissionStatus, requestPermission] = useCameraPermissions();
-  const [photo, setPhoto] = useState(null)
+  const [photo, setPhoto] = useState(initialValue)
 
   const checkPermission = async() => {
     if (cameraPermissionStatus.status === PermissionStatus.UNDETERMINED) {

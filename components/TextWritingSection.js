@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { TextInput, View, StyleSheet, ScrollView, KeyboardAvoidingView } from "react-native"
 
-const TextWritingSection = ({onWrite}) => {
-  const [text, setText] = useState('')
+const TextWritingSection = ({onWrite, initialValue}) => {
+  const [text, setText] = useState(initialValue)
 
   const textChangeHandler = (value) => {
     setText(value)

@@ -6,11 +6,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import CalendarScreen from './screens/CalendarScreen';
 import ManageDiaryScreen from './screens/ManageDiaryScreen'
 import IconButton from './components/IconButton';
+import { useEffect } from 'react';
+import { initializeDB } from './utils/database';
 
 const Stack = createNativeStackNavigator() 
 
 
 export default function App() {
+
+  useEffect(() => {
+    initializeDB()
+  }, [])
+
   return (
     <>
       <StatusBar style="auto" />

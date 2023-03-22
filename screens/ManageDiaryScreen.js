@@ -3,14 +3,36 @@ import {ScrollView, StyleSheet } from 'react-native'
 import PhotoPicker from '../components/PhotoPicker'
 import TextWritingSection from '../components/TextWritingSection'
 import IconButton from '../components/IconButton'
+import { createDiary, updateDiary } from '../utils/database'
 
 const ManageDiary = ({route, navigation}) => {
   const date = route.params ? route.params.date : new Date().toJSON().slice(0, 10)
-  const [textContent, setTextContent] = useState('')
-  const [photo, setPhoto] = useState()
+  const initialValues = {
+    diary_id: route.params?.diaryRecord?.diary_id,
+    content: route.params?.diaryRecord?.content,
+    image_uri: route.params?.diaryRecord?.image_uri
+  } 
+  const [textContent, setTextContent] = useState(initialValues.content)
+  const [photo, setPhoto] = useState(initialValues.image_uri)
 
-  const saveContentHandler = () => {
-    // send textContent & photo to database
+  const saveContentHandler = async() => {
+    if (initialValues.diary_id) {
+      await updateDiary({
+        diary_id: initialValues.diary_id,
+        content: textContent,
+        image_uri: photo,
+        happiness_level: 5
+      })
+    } else {
+      await createDiary({
+        written_date: date,
+        content: textContent,
+        image_uri: photo,
+        happiness_level: 5
+      })
+    }
+
+    navigation.navigate('Calendar')
   }
 
   useLayoutEffect(()=>{
@@ -39,8 +61,8 @@ const ManageDiary = ({route, navigation}) => {
   return (
     <>
       <ScrollView style={styles.scrollViewContainer}>
-        <PhotoPicker onPick={photoPickHandler}/>
-        <TextWritingSection onWrite={textContentHandler}/>      
+        <PhotoPicker onPick={photoPickHandler} initialValue={photo}/>
+        <TextWritingSection onWrite={textContentHandler} initialValue={textContent}/>      
       </ScrollView>
     </>
   )
