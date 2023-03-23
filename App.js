@@ -1,16 +1,16 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { StyleSheet } from 'react-native';
 
-import CalendarScreen from './screens/CalendarScreen';
-import ManageDiaryScreen from './screens/ManageDiaryScreen'
-import IconButton from './components/IconButton';
 import { useEffect } from 'react';
-import { initializeDB } from './utils/database';
+import IconButton from './components/IconButton';
+import { Colors } from './constants/colors';
+import CalendarScreen from './screens/CalendarScreen';
+import ManageDiaryScreen from './screens/ManageDiaryScreen';
+import { getDiaryByDate, initializeDB } from './utils/database';
 
 const Stack = createNativeStackNavigator() 
-
 
 export default function App() {
 
@@ -18,22 +18,41 @@ export default function App() {
     initializeDB()
   }, [])
 
+  const iconClickHandler = async(navigation) => {
+    const today = new Date().toJSON().slice(0, 10)
+    const diaryRecord = await getDiaryByDate(today)
+    navigation.navigate('ManageDiary', {
+      date: today,
+      diaryRecord
+    })
+  }
+
   return (
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerTintColor: Colors.primaryGreen,
+            headerStyle: {
+              backgroundColor: Colors.backgroundColor
+            },
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        >
           <Stack.Screen
             name='Calendar'
             component={CalendarScreen}
             options={({navigation}) => ({
-              title: 'Happy Days',
+              title: 'Happy Diary',
               headerRight: ({tintColor}) => (
                 <IconButton
                   icon='feather'
                   color={tintColor}
                   size={28}
-                  onPress={() => {navigation.navigate('ManageDiary')}}
+                  onPress={() => iconClickHandler(navigation)}
                 />
                 )
             })}
@@ -48,11 +67,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

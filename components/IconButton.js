@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Pressable, StyleSheet } from 'react-native';
 
 function IconButton({ icon, color, size, onPress }) {
   return (

@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { TextInput, View, StyleSheet, ScrollView, KeyboardAvoidingView } from "react-native"
+import { KeyboardAvoidingView, StyleSheet, TextInput } from "react-native"
+import { Colors } from "../constants/colors"
 
 const TextWritingSection = ({onWrite, initialValue}) => {
   const [text, setText] = useState(initialValue)
@@ -31,8 +32,7 @@ const styles = StyleSheet.create({
   textInput: {
     textAlignVertical: 'auto',
     fontSize: 16,
-    // borderBottomColor: 'gray',
-    // borderWidth: 1
+    color: Colors.textColor
   }
 })
 

@@ -1,11 +1,14 @@
+import { useIsFocused } from '@react-navigation/native';
 import { useCallback, useLayoutEffect, useState } from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native'
+import { Image, StyleSheet, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { useIsFocused } from '@react-navigation/native'
+import monthsDictionary from '../assets/months/monthsDictionary';
+import { Colors } from '../constants/colors';
 import { getDiaries, getDiaryByDate } from '../utils/database';
 
 const CalendarScreen = ({ navigation }) => {
   const [diaries, setDiaries] = useState([])
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
   const isFocused = useIsFocused()
 
   useLayoutEffect(() => {
@@ -20,7 +23,6 @@ const CalendarScreen = ({ navigation }) => {
 
   const dateClickHandler = async(dateData) => {
     const diaryRecord = await getDiaryByDate(dateData.dateString)
-    console.log('inside:', diaryRecord)
     navigation.navigate('ManageDiary', {
       date: dateData.dateString,
       diaryRecord
@@ -28,7 +30,7 @@ const CalendarScreen = ({ navigation }) => {
   }
 
   const monthChangeHandler = (dateData) => {
-    // should update the image of the month
+    setSelectedMonth(dateData.month)
   }
 
   const convertDiariesToObject = useCallback((data) => {
@@ -42,14 +44,24 @@ const CalendarScreen = ({ navigation }) => {
   return (
     <View style={styles.calendarContainer}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={require(`../assets/months/month-3.png`)}/>
+        <Image style={styles.image} source={monthsDictionary[selectedMonth]}/>
       </View>
       <View style={styles.innerCalendarContainer}>
         <Calendar
           onDayPress={dateClickHandler}
-          style={styles.calendar}
           markedDates={convertDiariesToObject(diaries)}
-          onMonthChange={(dateData) => console.log('month:', dateData.month)}
+          onMonthChange={monthChangeHandler}
+          theme={{
+            backgroundColor: Colors.backgroundColor,
+            calendarBackground: Colors.backgroundColor,
+            textSectionTitleColor: Colors.primaryGreen,
+            todayTextColor: Colors.backgroundColor,
+            todayBackgroundColor: Colors.primaryGreen,
+            dotColor: Colors.primaryGreen,
+            monthTextColor: Colors.primaryGreen,
+            textMonthFontWeight: 'bold',
+            arrowColor: Colors.primaryGreen
+          }}
         />
       </View>
     </View>
@@ -61,7 +73,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: Colors.backgroundColor
   },
   imageContainer: {
     width: '100%',
@@ -75,9 +88,6 @@ const styles = StyleSheet.create({
   },
   innerCalendarContainer: {
     width: '100%'
-  },
-  calendar: {
-    // width: '100%'
   }
 })
 

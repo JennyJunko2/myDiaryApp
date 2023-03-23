@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import { View, Text, Image, StyleSheet, Alert } from 'react-native'
-import { launchCameraAsync, useCameraPermissions, PermissionStatus } from 'expo-image-picker'
-import IconButton from './IconButton'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { launchCameraAsync, PermissionStatus, useCameraPermissions } from 'expo-image-picker';
+import { useState } from 'react';
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Colors } from '../constants/colors';
 
 const PhotoPicker = ({onPick, initialValue}) => {
   const [cameraPermissionStatus, requestPermission] = useCameraPermissions();
@@ -45,35 +46,55 @@ const PhotoPicker = ({onPick, initialValue}) => {
 
   }
 
-  let photoPreview = <Text>Let's take today's photo</Text>
+  let photoPreview = (
+    <Pressable style={[styles.imagePreviewContainer, styles.border]} onPress={takePhotoHandler}>
+      <Text style={styles.previewText}>Let's take today's photo</Text>
+      <MaterialCommunityIcons name='camera' color={Colors.primaryGreen} size={30} style={{marginTop: 8}}/>
+    </Pressable>
+  )
 
   if (photo) {
-    photoPreview = <Image source={{uri: photo}} style={styles.image}/>
+    photoPreview = (
+      <View style={styles.imagePreviewContainer}>
+        <Image source={{uri: photo}} style={styles.image}/>
+      </View>
+    )
   }
 
   return (
-    <View>
-      <View style={styles.imagePreviewContainer}>
-        {photoPreview}
-        <IconButton icon='camera' color='blue' size={24} onPress={takePhotoHandler}/>
-      </View>
-      <Image />
+    <View style={styles.rootContainer}>
+      {photoPreview}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8
+  },
   imagePreviewContainer: {
     width: '100%',
     height: 300,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 8,
-    marginTop: 24
+    borderRadius: 10
   },
   image: {
     width: '100%',
     height: '100%',
+    borderRadius: 10
+  },
+  border: {
+    borderWidth: 2,
+    borderColor: Colors.primaryGreen,
+    borderStyle: 'dashed',
+  },
+  previewText: {
+    fontSize: 16,
+    color: Colors.textColor
   }
 })
 

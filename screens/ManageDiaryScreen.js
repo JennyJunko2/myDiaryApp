@@ -1,12 +1,12 @@
 import { useLayoutEffect, useState } from 'react'
-import {ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
+import IconButton from '../components/IconButton'
 import PhotoPicker from '../components/PhotoPicker'
 import TextWritingSection from '../components/TextWritingSection'
-import IconButton from '../components/IconButton'
 import { createDiary, updateDiary } from '../utils/database'
 
 const ManageDiary = ({route, navigation}) => {
-  const date = route.params ? route.params.date : new Date().toJSON().slice(0, 10)
+  const date = route.params.date
   const initialValues = {
     diary_id: route.params?.diaryRecord?.diary_id,
     content: route.params?.diaryRecord?.content,
@@ -40,14 +40,17 @@ const ManageDiary = ({route, navigation}) => {
       title: date,
       headerRight: ({tintColor}) => (
         <IconButton
-          icon='content-save-edit'
+          icon='check'
           color={tintColor}
           size={28}
           onPress={saveContentHandler}
         />
         )
     })
+
+
   }, [route, saveContentHandler])
+
 
   const photoPickHandler = (takenPhoto) => {
     setPhoto(takenPhoto)
@@ -71,7 +74,8 @@ const ManageDiary = ({route, navigation}) => {
 const styles = StyleSheet.create({
   scrollViewContainer: {
     flex: 1,
-    marginBottom: 10
+    marginBottom: 10,
+    backgroundColor: '#ffffff'
   }
 })
 
