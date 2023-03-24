@@ -3,7 +3,6 @@ import * as SQLite from 'expo-sqlite'
 const database = SQLite.openDatabase('diaries.db')
 
 export const initializeDB = () => {
-  console.log('in intialise function')
   const promise = new Promise((resolve, reject) => {
     database.transaction(
       (transaction) => {
@@ -96,6 +95,25 @@ export const updateDiary = (diary) => {
         WHERE diary_id = ?
         `,
         [diary.content, diary.image_uri, diary.happiness_level, diary.diary_id],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, error) => {
+          reject(error)
+        }
+      )
+    })
+  })
+
+  return promise
+}
+
+export const dropDB = () => {
+  const promise = new Promise((resolve, reject) => {
+    database.transaction((transaction) => {
+      transaction.executeSql(
+        `DROP TABLE IF EXISTS diaries`,
+        [],
         (_, result) => {
           resolve(result)
         },

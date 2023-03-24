@@ -2,6 +2,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { SliderBox } from 'react-native-image-slider-box';
 import monthsDictionary from '../assets/months/monthsDictionary';
 import { Colors } from '../constants/colors';
 import { getDiaries, getDiaryByDate } from '../utils/database';
@@ -9,6 +10,7 @@ import { getDiaries, getDiaryByDate } from '../utils/database';
 const CalendarScreen = ({ navigation }) => {
   const [diaries, setDiaries] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const isFocused = useIsFocused()
 
   useLayoutEffect(() => {
@@ -31,6 +33,7 @@ const CalendarScreen = ({ navigation }) => {
 
   const monthChangeHandler = (dateData) => {
     setSelectedMonth(dateData.month)
+    setSelectedYear(dateData.year)
   }
 
   const convertDiariesToObject = useCallback((data) => {
@@ -41,10 +44,27 @@ const CalendarScreen = ({ navigation }) => {
     return diariesObject
   },[diaries])
 
+  let imagesForThisMonth
+  if (diaries) {
+    const formattedMonth = selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth
+    imagesForThisMonth = diaries
+      .filter((diary) => diary.written_date.startsWith(`${selectedYear}-${formattedMonth}`))
+      .map((item) => item.image_uri)
+  }
+
   return (
     <View style={styles.calendarContainer}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={monthsDictionary[selectedMonth]}/>
+        {
+          imagesForThisMonth.length === 0
+            ? <Image style={styles.image} source={monthsDictionary[selectedMonth]}/>
+            : <SliderBox
+              images={imagesForThisMonth}
+              autoplay={true}
+              circleLoop={true} // set to 'false' if want to avoid VirtualizedList warning
+              ImageComponentStyle={styles.image}
+            />
+        }
       </View>
       <View style={styles.innerCalendarContainer}>
         <Calendar
@@ -84,7 +104,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    opacity: 0.8
   },
   innerCalendarContainer: {
     width: '100%'
