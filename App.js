@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
 
 import { useEffect } from 'react';
 import IconButton from './components/IconButton';
@@ -19,10 +18,10 @@ export default function App() {
   }, [])
 
   const iconClickHandler = async(navigation) => {
-    const today = new Date().toJSON().slice(0, 10)
-    const diaryRecord = await getDiaryByDate(today)
+    const localToday = new Date().toLocaleDateString('sv-SE')
+    const diaryRecord = await getDiaryByDate(localToday)
     navigation.navigate('ManageDiary', {
-      date: today,
+      date: localToday,
       diaryRecord
     })
   }
