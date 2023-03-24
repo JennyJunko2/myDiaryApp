@@ -18,11 +18,11 @@ Happy Diary is a React Native mobile app with which you can take a journal along
 ```
 git clone https://github.com/JennyJunko2/myDiaryApp.git
 ```
-1. Install dependencies
+2. Install dependencies
 ```
 npm install
 ```
-1. Run it with Expo Go app, i-phone simulator, or android studio
+3. Run it with Expo Go app, i-phone simulator, or android studio
 ```
 npx expo start
 ```
